@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import Element from 'element-ui';
+import 'normalize.css'
+import '@/assets/css/base.css'
 Vue.use(Element, { size: 'small', zIndex: 3000 });
 
 Vue.config.productionTip = false

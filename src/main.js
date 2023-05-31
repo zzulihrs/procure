@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import Element from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
 import 'normalize.css'
 import '@/assets/css/base.css'
 Vue.use(Element, { size: 'small', zIndex: 3000 });

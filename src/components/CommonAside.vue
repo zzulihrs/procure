@@ -1,11 +1,10 @@
 <template>
-  <div>
   <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"
            background-color="#545c64"
            text-color="#fff"
            active-text-color="#ffd04b">
     <h3>通用后台管理系统</h3>
-    <el-menu-item v-for="item in noChildren" :key="item.name" :index="item.name">
+    <el-menu-item @click="clickMenu(item)" v-for="item in noChildren" :key="item.name" :index="item.name">
       <i :class="`el-icon-${item.icon}`"></i>
       <span slot="title">{{ item.label }}</span>
     </el-menu-item>
@@ -15,14 +14,13 @@
         <i :class="`el-icon-${item.icon}`"></i>
         <span slot="title">{{  item.label }}</span>
       </template>
-      
-      <el-menu-item-group v-for="subItem in item.children" :key="subItem.path">
-        <el-menu-item :index="subItem.path">{{ subItem.label }}</el-menu-item>
+
+      <el-menu-item-group  v-for="subItem in item.children" :key="subItem.path">
+        <el-menu-item @click="clickMenu(subItem)" :index="subItem.path">{{ subItem.label }}</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    
+
   </el-menu>
-  </div>
 </template>
 
 <script>
@@ -82,6 +80,13 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    // 点击菜单
+    clickMenu(item) {
+      console.log(item);
+      // 当页面的路由和跳转的路由不一致才允许跳转
+      if(this.$route.path !== item.path && (this.$route.path === '/home' && item.path !== '/'))
+        this.$router.push(item.path)
     }
   },
   computed: {
@@ -96,7 +101,7 @@ export default {
     }
     
   }
-  
+
 }
 </script>
 

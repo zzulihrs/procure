@@ -53,7 +53,7 @@
 </template>
 
 <script>
-
+import {getData} from '../api/index'
 export default {
   name: "Home",
   data() {
@@ -136,6 +136,9 @@ export default {
       ],
     }
   },
+  mounted() {
+    getData().then
+  }
 }
 </script>
 

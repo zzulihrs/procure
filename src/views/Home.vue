@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="8"><div class="grid-content bg-purple">
+    <el-col :span="8" style="padding-right: 10px;"><div class="grid-content bg-purple">
       <el-card class="box-card">
         <div class="user">
           <img src="../assets/logo.png" alt="150px">
@@ -38,7 +38,7 @@
         </el-table>
       </el-card>
     </div></el-col>
-    <el-col :span="16">
+    <el-col :span="16" style="padding-left: 10px;">
       <div class="num">
         <el-card v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: 0}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
@@ -47,6 +47,13 @@
             <p class="desc">{{item.name}}</p>
           </div>
         </el-card>
+      </div>
+      <el-card style="height: 280px">
+        <!--折线图-->
+      </el-card>
+      <div class="graph">
+        <el-card style="height: 260px"></el-card>
+        <el-card style="height: 260px"></el-card>
       </div>
     </el-col>
   </el-row>
@@ -58,44 +65,7 @@ export default {
   name: "Home",
   data() {
     return {
-      tableData: [
-        {
-          name: 'oppo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: 'vivo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '苹果',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '小米',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '三星',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '魅族',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        }
-      ],
+      tableData: [],
       countData: [
         {
           name: "今日支付订单",
@@ -137,8 +107,10 @@ export default {
     }
   },
   mounted() {
-    getData().then((res)=>{
-      console.log(res);
+    getData().then(({data})=>{
+      const {tableData} = data.data;
+      console.log(tableData);
+      this.tableData = tableData;
     })
   }
 }
@@ -216,6 +188,15 @@ export default {
   .el-card{
     width: 32%;
     margin-bottom: 20px;
+  }
+}
+
+.graph{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  .el-card{
+    width: 48%;
   }
 }
 </style>

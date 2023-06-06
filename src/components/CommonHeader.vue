@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="left-content">
-      <el-button icon="el-icon-menu" size="mini"></el-button>
+      <el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
       <!-- 面包屑 -->
       <span class="text">首页</span>
     </div>
@@ -23,7 +23,14 @@
 
 <script>
 export default {
-  name: "CommonHeader"
+  name: "CommonHeader",
+  data() {
+  },
+  methods: {
+    handleMenu() {
+      this.$store.commit('collapseMenu')
+    }
+  }
 }
 </script>
 

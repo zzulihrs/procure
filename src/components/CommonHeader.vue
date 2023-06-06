@@ -25,6 +25,9 @@
 export default {
   name: "CommonHeader",
   data() {
+    return {
+
+    }
   },
   methods: {
     handleMenu() {

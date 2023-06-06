@@ -137,7 +137,9 @@ export default {
     }
   },
   mounted() {
-    getData().then
+    getData().then((res)=>{
+      console.log(res);
+    })
   }
 }
 </script>

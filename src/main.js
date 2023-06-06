@@ -5,6 +5,7 @@ import store from './store'
 import './plugins/element.js'
 import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import './api/mock'
 
 import 'normalize.css'
 import '@/assets/css/base.css'

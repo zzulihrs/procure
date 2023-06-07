@@ -3,7 +3,9 @@
     <div class="left-content">
       <el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
       <!-- 面包屑 -->
-      <span class="text">首页</span>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{ item.name }}</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
 
     <div class="right-content">
@@ -22,12 +24,21 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: "CommonHeader",
   data() {
     return {
 
     }
+  },
+  mounted() {
+    console.log('tags: ', this.tags);
+  },
+  computed: {
+    ...mapState({
+      tags: state => state.tab.tabsList
+    })
   },
   methods: {
     handleMenu() {

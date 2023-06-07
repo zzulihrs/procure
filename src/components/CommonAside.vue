@@ -84,8 +84,11 @@ export default {
     clickMenu(item) {
       console.log(item);
       // 当页面的路由和跳转的路由不一致才允许跳转
-      if(this.$route.path !== item.path || (this.$route.path === '/home' && item.path !== '/'))
-        this.$router.push(item.path)
+      if(this.$route.path === item.path || (this.$route.path === '/home' && item.path === '/'));
+      else {
+        this.$router.push(item.path);
+        this.$store.commit('selectMenu', item);
+      }
     }
   },
   computed: {
@@ -102,7 +105,7 @@ export default {
     isCollapse() {
       return this.$store.state.tab.isCollapse;
     },
-    
+
   }
 
 }

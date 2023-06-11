@@ -19,22 +19,27 @@ const routes = [
     children: [
       { // 首页
         path: 'home',
+        name: 'home',
         component: Home
       },
       { // 用户管理
         path: 'user',
+        name: 'user',
         component: User
       },
       { // 商品管理
         path: 'mall',
+        name: 'mall',
         component: Mall
       },
       { // 页面1
         path: 'page1',
+        name: 'page1',
         component: PageOne
       },
       { // 页面2
         path: 'page2',
+        name: 'page2',
         component: PageTwo
       },
     ]

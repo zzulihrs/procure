@@ -9,7 +9,7 @@
       <span slot="title">{{ item.label }}</span>
     </el-menu-item>
 
-    <el-submenu v-for="item in haschildren" :key="item.label" :index="item.label">
+    <el-submenu v-for="item in hasChildren" :key="item.label" :index="item.label">
       <template slot="title">
         <i :class="`el-icon-${item.icon}`"></i>
         <span slot="title">{{  item.label }}</span>
@@ -98,7 +98,7 @@ export default {
     },
 
     // 有子菜单
-    haschildren() {
+    hasChildren() {
       return this.menuData.filter(item => item.children);
     },
 

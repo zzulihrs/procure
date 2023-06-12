@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import {getUser} from '@/api/index'
 export default {
   name: "User",
   data() {
@@ -73,8 +74,15 @@ export default {
         addr: [
           { required: true, message: '请输入地址'}
         ],
-      }
+      },
+      tableData: [],
     }
+  },
+  mounted() {
+    // 获取的列表数据
+    getUser().then(({data}) => {
+      console.log("data"+data);
+    })
   },
   methods: {
     // 提交用户表单

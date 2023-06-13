@@ -41,43 +41,64 @@
         <el-button @click="handleAdd" type="primary">
           + 新增
         </el-button>
-        <el-table
+        <!-- form搜索区域   -->
+        <el-form :inline="true" :model="userForm">
+          <el-form-item>
+            <el-input placeholder="请输入名称" v-model="userForm.name"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit" @keydown.enter="onSubmit">查询</el-button>
+          </el-form-item>
+        </el-form>
+    </div>
+
+    <div class="common-table">
+      <el-table
+          stripe
           :data="tableData"
           style="width: 100%">
-          <el-table-column
+        <el-table-column
             prop="name"
             label="姓名">
-          </el-table-column>
-          <el-table-column
+        </el-table-column>
+        <el-table-column
             prop="sex"
             label="性别">
-            <template v-slot="scope">
-              <span style="margin-left: 10px">{{ scope.row.sex == 1 ? '男' : '女'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-              prop="age"
-              label="年龄">
-          </el-table-column>
-          <el-table-column
-              prop="birth"
-              label="出生日期">
-          </el-table-column>
-          <el-table-column
-              prop="addr"
-              label="地址">
-          </el-table-column>
-          <el-table-column
+          <template v-slot="scope">
+            <span style="margin-left: 10px">{{ scope.row.sex == 1 ? '男' : '女'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            prop="age"
+            label="年龄">
+        </el-table-column>
+        <el-table-column
+            prop="birth"
+            label="出生日期">
+        </el-table-column>
+        <el-table-column
             prop="addr"
             label="地址">
-            <template v-slot="scope">
-              <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="danger" size="mini" @click="handleDelete(scope.row)" >删除</el-button>
-            </template>
-          </el-table-column>
+        </el-table-column>
+        <el-table-column
+            prop="addr"
+            label="地址">
+          <template v-slot="scope">
+            <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)" >删除</el-button>
+          </template>
+        </el-table-column>
 
-        </el-table>
+      </el-table>
+      <div class="pager">
+        <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="handlePage">
+        </el-pagination>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -114,6 +135,14 @@ export default {
       },
       tableData: [],
       modalType: 0, // 0表示新增的弹窗，1表示删除
+      total: 0,     // 当前的总条数
+      pageData: {
+        page: 1,
+        limit: 10,
+      },
+      userForm: {
+        name:  '',
+      },
     }
   },
   mounted() {
@@ -190,16 +219,42 @@ export default {
     // 获取列表的数据
     getList() {
       // 获取的列表数据
-      getUser().then(({data}) => {
+      getUser({params: {...this.userForm, ...this.pageData }}).then(({data}) => {
         console.log(data);
         this.tableData = data.list;
+        this.total = data.count || 0;
       })
-    }
+    },
+    // 选择页码的回调函数
+    handlePage(val) {
+      this.pageData.page = val;
+      this.getList();
+    },
+    // 列表的查询
+    onSubmit() {
+      this.getList();
+    },
 
   },
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.manage {
+  height: 90%;
+  .manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  };
+  .common-table {
+    position: relative;
+    height: calc(60% - 62px);
+    .pager {
+      position: absolute;
+      bottom: 0;
+      right: 20px;
+    }
+  }
+}
 </style>

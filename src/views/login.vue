@@ -1,5 +1,5 @@
 <template>
-  <el-form class="login_container" label-width="70px" :inline="true" :model="form" :rules="rules">
+  <el-form ref="form" class="login_container" label-width="70px" :inline="true" :model="form" :rules="rules">
     <h3 class="login_title">系统登录</h3>
     <el-form-item label="用户名" prop="username">
       <el-input v-model="form.username" placeholder="请输入账号"></el-input>
@@ -16,6 +16,8 @@
 
 <script>
 import Cookie from 'js-cookie'
+import {getMenu} from "@/api";
+
 export default {
   name: "login",
   data() {
@@ -37,12 +39,28 @@ export default {
   methods: {
     // 登录
     submit() {
-      // token 信息
-      const token = this.generateGUID();
-      // token信息存入cookie用于不同页面间的通信
-      Cookie.set('token', token);
-      // 跳转到首页
-      this.$router.push('/home')
+      // // token 信息
+      // const token = this.generateGUID();
+      // // token信息存入cookie用于不同页面间的通信
+      // Cookie.set('token', token);
+
+      // 校验通过
+      console.log('submit');
+      this.$refs.form.validate((valid) => {
+        if(valid) {
+          getMenu(this.form).then(({ data }) => {
+            console.log(data);
+            if(data.code == 20000) {
+              let token = data.data.token;
+              Cookie.set('token', token);
+              // 跳转到首页
+              this.$router.push('/home')
+            } else {
+              this.$message.error(data.data.message);
+            }
+          });
+        }
+      });
     },
     generateGUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

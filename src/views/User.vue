@@ -15,15 +15,16 @@
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="form.sex" placeholder="请选择">
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="0"></el-option>
+            <el-option label="男" :value="1"></el-option>
+            <el-option label="女" :value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="出生日期" prop="birth">
           <el-date-picker
               v-model="form.birth"
               type="date"
-              placeholder="选择日期">
+              placeholder="选择日期"
+              value-format="yyyy-MM-DD">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="地址" prop="addr">
@@ -37,15 +38,51 @@
       </span>
     </el-dialog>
     <div class="manage-header">
-        <el-button @click="dialogVisible=true" type="primary">
+        <el-button @click="handleAdd" type="primary">
           + 新增
         </el-button>
+        <el-table
+          :data="tableData"
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="姓名">
+          </el-table-column>
+          <el-table-column
+            prop="sex"
+            label="性别">
+            <template v-slot="scope">
+              <span style="margin-left: 10px">{{ scope.row.sex == 1 ? '男' : '女'}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              prop="age"
+              label="年龄">
+          </el-table-column>
+          <el-table-column
+              prop="birth"
+              label="出生日期">
+          </el-table-column>
+          <el-table-column
+              prop="addr"
+              label="地址">
+          </el-table-column>
+          <el-table-column
+            prop="addr"
+            label="地址">
+            <template v-slot="scope">
+              <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button type="danger" size="mini" @click="handleDelete(scope.row)" >删除</el-button>
+            </template>
+          </el-table-column>
+
+        </el-table>
     </div>
   </div>
 </template>
 
 <script>
-import {getUser} from '@/api/index'
+import { getUser, addUser, editUser, delUser} from '@/api/index'
 export default {
   name: "User",
   data() {
@@ -76,13 +113,11 @@ export default {
         ],
       },
       tableData: [],
+      modalType: 0, // 0表示新增的弹窗，1表示删除
     }
   },
   mounted() {
-    // 获取的列表数据
-    getUser().then(({data}) => {
-      console.log("data"+data);
-    })
+    this.getList();
   },
   methods: {
     // 提交用户表单
@@ -90,6 +125,17 @@ export default {
       this.$refs.form.validate((isValid, invalidFields)=>{
         if(isValid) {
           // 后续对表单数据的处理
+          if(this.modalType === 0) {
+            addUser(this.form).then(() => {
+              // 重新获取列表的接口
+              this.getList();
+            })
+          } else {
+            editUser(this.form).then(() => {
+              // 重新获取列表的接口
+              this.getList();
+            })
+          }
 
           this.$refs.form.resetFields(); // 清空表单的数据
           // 关闭弹窗
@@ -105,7 +151,51 @@ export default {
 
     cancel() {
       this.handleClose();
+    },
+
+    handleAdd() {
+      this.modalType = 0;
+      this.dialogVisible = true;
+    },
+
+    handleEdit(row) {
+      this.modalType = 1;
+      this.dialogVisible = true;
+      // 注意需要对当前行数据进行深拷贝，否则会出错
+      this.form = JSON.parse(JSON.stringify(row))
+    },
+
+    handleDelete(row) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delUser({id: row.id}).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getList();
+          })
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+      });
+    },
+
+    // 获取列表的数据
+    getList() {
+      // 获取的列表数据
+      getUser().then(({data}) => {
+        console.log(data);
+        this.tableData = data.list;
+      })
     }
+
   },
 }
 </script>
